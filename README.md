@@ -17,7 +17,7 @@ npm install sevenzip-node
 
 ## Usage
 Simply include the module with this code:
-```
+```js
 const sevenZip = require('sevenzip-node');
 ```
 

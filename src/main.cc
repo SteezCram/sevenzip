@@ -33,7 +33,6 @@ inline Napi::Value Compress (const Napi::CallbackInfo& info)
         files = napi_array_to_vector_wstring(config.Get("files").As<Napi::Array>());
     std::wstring destination = (config.Has("destination")) ? u16string_to_wstring(config.Get("destination").ToString().Utf16Value()) : L"";
     int level = (config.Has("level")) ? config.Get("level").ToNumber().Int32Value() : -1;
-    std::wstring password = (config.Has("password")) ? u16string_to_wstring(config.Get("password").ToString().Utf16Value()) : L"";
     
 
     if (std::filesystem::exists(destination))

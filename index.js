@@ -1,6 +1,7 @@
 const fs = require('fs');
+const preGyp = require('@mapbox/node-pre-gyp');
 const path = require('path');
-const sevenZip = require('./sevenzip-node.node');
+const sevenZip = require(preGyp.find(path.resolve(path.join(__dirname,'./package.json'))));
 
 
 
@@ -27,8 +28,12 @@ module.exports.CompressionLevel = {
 */
 module.exports.compress = function (algorithm, parameters, callback) 
 {
-    if (algorithm === '')
-        algorithm = '7z';
+    algorithm = (algorithm === '' || algorithm === null) ? '7z' : algorithm;
+    parameters.dll = (parameters.dll === undefined || parameters.dll.trim() === '' || parameters.dll === null) ? path.join('os', 'win', process.arch, '7z.dll') : parameters.dll;
+
+    if (parameters.dir !== undefined && parameters.files !== undefined) {
+        throw 'Cannot use dir and files property at the same time';
+    }
 
     if (fs.lstatSync(parameters.destination).isDirectory()) {
         if (parameters.dir === undefined)
@@ -36,6 +41,7 @@ module.exports.compress = function (algorithm, parameters, callback)
 
         parameters.destination = path.join(parameters.destination, `${path.basename(parameters.dir)}.${algorithm}`);
     }
+
 
     if (callback !== null || callback !== undefined) {
         sevenZip.__compress(algorithm, parameters, callback);
@@ -59,12 +65,8 @@ module.exports.compress = function (algorithm, parameters, callback)
 */
 module.exports.extract = function (algorithm, parameters, callback) 
 {
-    if (algorithm === '')
-        algorithm = '7z';
-
-    if (fs.lstatSync(parameters.destination).isDirectory()) {
-        parameters.destination = path.join(parameters.destination, path.basename(parameters.archive, algorithm));
-    }
+    algorithm = (algorithm === '' || algorithm === null) ? '7z' : algorithm;
+    parameters.dll = (parameters.dll === undefined || parameters.dll.trim() === '' || parameters.dll === null) ? path.join('os', 'win', process.arch, '7z.dll') : parameters.dll;
 
 
     if (callback !== null || callback !== undefined) {

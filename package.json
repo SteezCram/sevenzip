@@ -2,13 +2,24 @@
   "name": "sevenzip-node",
   "version": "1.0.0",
   "description": "7-Zip native wrapper around 7z.dll",
+  "homepage": "https://github.com/SteezCram/sevenzip-node",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/SteezCram/sevenzip-node.git"
+  },
+  "binary": {
+    "module_name": "sevenzip-node",
+    "module_path": "./lib/{platform}/{arch}",
+    "host": "undefined"
+  },
   "main": "index.js",
   "gypfile": true,
   "scripts": {
     "start": "node index.js",
-    "test": "node test.js",
+    "test": "node ./test/compress.test.js",
     "build": "node-gyp rebuild",
-    "clean": "node-gyp clean"
+    "clean": "node-gyp clean",
+    "install" : "node-pre-gyp install --fallback-to-build"
   },
   "author": "Thomas Croizet (Steez)",
   "license": "MIT",
@@ -16,6 +27,15 @@
     "node-gyp": "^8.0.0"
   },
   "dependencies": {
+    "@mapbox/node-pre-gyp": "^1.0.5",
     "node-addon-api": "^3.2.1"
-  }
+  },
+  "keywords": [
+    "7z",
+    "7za",
+    "sevenzip",
+    "LZMA",
+    "LZMA2",
+    "compress"
+  ]
 }

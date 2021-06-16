@@ -26,7 +26,7 @@ inline Napi::Value Compress (const Napi::CallbackInfo& info)
     std::string algorithm = info[0].ToString();
 
     Napi::Object config = info[1].As<Napi::Object>();
-    std::wstring dll = (config.Has("dll")) ? u16string_to_wstring(config.Get("dll").ToString().Utf16Value()) : L"7z.dll";
+    std::wstring dll = u16string_to_wstring(config.Get("dll").ToString().Utf16Value());
     std::wstring dir = (config.Has("dir")) ? u16string_to_wstring(config.Get("dir").ToString().Utf16Value()) : L"";
     std::vector<std::wstring> files;
     if (config.Has("files"))
@@ -82,7 +82,7 @@ inline Napi::Value Extract (const Napi::CallbackInfo& info)
     std::string algorithm = info[0].ToString();
 
     Napi::Object config = info[1].As<Napi::Object>();
-    std::wstring dll = (config.Has("dll")) ? u16string_to_wstring(config.Get("dll").ToString().Utf16Value()) : L"7z.dll";
+    std::wstring dll = u16string_to_wstring(config.Get("dll").ToString().Utf16Value());
     std::wstring archive = (config.Has("archive")) ? u16string_to_wstring(config.Get("archive").ToString().Utf16Value()) : L"";
     std::wstring destination = (config.Has("destination")) ? u16string_to_wstring(config.Get("destination").ToString().Utf16Value()) : L"";
 

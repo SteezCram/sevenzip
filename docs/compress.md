@@ -16,24 +16,28 @@ Compress a whole directory or some files. If the destination exists, it will be 
 
 ## Exemple
 ```js
-const sevenZip = require('./index');
+const sevenZip = require('sevenzip-node');
 
 // By set the destination as a directory, the archive name will be: test.7z
 sevenZip.compress("7z", {dir: 'C:\\Users\\public\\Desktop\\test', destination: 'C:\\Users\\tcroi\\Desktop\\'}, (error) => {
-    console.log(error);
+    if (error) throw error;
 });
 
+// Compress the selected files with Deflate64
 sevenZip.compress("zip", {files: ['C:\\Users\\public\\Desktop\\test\\bigtxt.txt', 'C:\\Users\\public\\Desktop\\test\\bigmp4.mp4'], destination: 'C:\\Users\\tcroi\\Desktop\\test.zip', is64: true}, (error) => {
-    console.log(error);
+    if (error) throw error;
 });
 ```
 
 ### Using await
 ```js
-const sevenZip = require('./index');
+const sevenZip = require('sevenzip-node');
 
 // By set the destination as a directory, the archive name will be: test.7z
 var error = await sevenZip.compress("7z", {dir: 'C:\\Users\\public\\Desktop\\test', destination: 'C:\\Users\\tcroi\\Desktop\\'});
+if (error) throw error;
 
+// Compress the selected files with Deflate64
 error = sevenZip.compress("zip", {files: ['C:\\Users\\public\\Desktop\\test\\bigtxt.txt', 'C:\\Users\\public\\Desktop\\test\\bigmp4.mp4'], destination: 'C:\\Users\\tcroi\\Desktop\\test.zip', is64: true});
+if (error) throw error;
 ```

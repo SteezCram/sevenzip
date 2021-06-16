@@ -77,7 +77,7 @@ public:
     {
         Napi::HandleScope scope(Env());
         // Return the bit7z error since it doesn't trigger the OnError event
-        Callback().Call({Napi::String::New(Env(), this->exception)});
+        Callback().Call({this->exception == "" ? Env().Undefined() : Napi::String::New(Env(), this->exception)});
     }
 
 private:
@@ -148,7 +148,7 @@ public:
     {
         Napi::HandleScope scope(Env());
         // Return the bit7z error since it doesn't trigger the OnError event
-        Callback().Call({Napi::String::New(Env(), this->exception)});
+        Callback().Call({this->exception == "" ? Env().Undefined() : Napi::String::New(Env(), this->exception)});
     }
 
 private:

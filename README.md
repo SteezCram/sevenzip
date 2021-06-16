@@ -23,8 +23,8 @@ const sevenZip = require('sevenzip-node');
 
 ## Documentation
 ### Methods
-- compress
-- extract
+- [compress](https://github.com/SteezCram/sevenzip-node/blob/main/docs/compress.md)
+- [extract](https://github.com/SteezCram/sevenzip-node/blob/main/docs/extract.md)
 
 ### Objects
-- CompressionLevel
+- [CompressionLevel](https://github.com/SteezCram/sevenzip-node/blob/main/docs/CompressionLevel.md)

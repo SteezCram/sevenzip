@@ -8,7 +8,7 @@ Compress a whole directory or some files. If the destination exists, it will be 
     - `dir` `<String>`: directory to compress. Cannot be with `files` as the same time. _(global)_
     - `files` `<Array>`: files to compress. Cannot be with `dir` as the same time. _(global)_
     - `destination` `<String>`: directory or new archive file path. You can use a directory if `dir` is use. _(global)_
-    - `level` `<Number>`: compression level to use. Only accept: -1, 0, 1, 3, 5, 7, 9. You can use the [CompressionLevel]() enum. _(`7z` and `zip` only)_
+    - `level` `<Number>`: compression level to use. Only accept: -1, 0, 1, 3, 5, 7, 9. You can use the [CompressionLevel](https://github.com/SteezCram/sevenzip-node/blob/main/docs/CompressionLevel.md) enum. _(`7z` and `zip` only)_
     - `password` `<String>`: password to use to compress the archive. _(`7z` only)_
     - `is64` `<Boolean>`: use Deflate64 or Deflate. _(`zip` only_if_unset)_
 - `callback` `<Function>`

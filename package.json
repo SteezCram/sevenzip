@@ -17,9 +17,9 @@
   "scripts": {
     "start": "node index.js",
     "test": "node ./test/compress.test.js",
-    "build": "node-gyp rebuild",
+    "build": "node-pre-gyp build --build-from-source",
     "clean": "node-gyp clean",
-    "install" : "node-pre-gyp install --fallback-to-build"
+    "install": "node-pre-gyp install --fallback-to-build"
   },
   "author": "Thomas Croizet (Steez)",
   "license": "MIT",
@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.5",
-    "node-addon-api": "^3.2.1"
+    "node-addon-api": "^4.0.0"
   },
   "keywords": [
     "7z",

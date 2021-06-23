@@ -10,6 +10,12 @@ Extract an archive to the specified destination.
     - `password` `<String>`: password to use to compress the archive. _(`7z` only)_
 - `callback` `<Function>`
     - `error` `<Error>`
+- `progressCallback` `<Function>`
+    - `progress` `<Object>`: progress information
+        - `total` `<Number>`: total bytes to compress
+        - `progress` `<Number>`: progress
+        - `ratio` `<Number>`: compression ratio
+        - `fileProcessed` `<String>`: file currently processed
 
 ## Exemple
 ```js
@@ -18,6 +24,8 @@ const sevenZip = require('sevenzip-node');
 // By set the destination as a directory, the archive name will be: test.7z
 sevenZip.extract("7z", {archive: 'C:\\Users\\public\\Desktop\\test.7z', destination: 'C:\\Users\\tcroi\\Desktop\\test'}, (error) => {
     if (error) throw error;
+}, (progress) => {
+    console.log(progress);
 });
 ```
 
@@ -26,6 +34,8 @@ sevenZip.extract("7z", {archive: 'C:\\Users\\public\\Desktop\\test.7z', destinat
 const sevenZip = require('sevenzip-node');
 
 // By set the destination as a directory, the archive name will be: test.7z
-var error = await sevenZip.extract("7z", {archive: 'C:\\Users\\public\\Desktop\\test.7z', destination: 'C:\\Users\\tcroi\\Desktop\\test'});
+var error = await sevenZip.extract("7z", {archive: 'C:\\Users\\public\\Desktop\\test.7z', destination: 'C:\\Users\\tcroi\\Desktop\\test'}, null, (progress) => {
+    console.log(progress);
+});
 if (error) throw error;
 ```

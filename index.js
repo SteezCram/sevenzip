@@ -26,10 +26,10 @@ module.exports.CompressionLevel = {
  * 
  * @return {promise} - pending operation
 */
-module.exports.compress = function (algorithm, parameters, callback) 
+module.exports.compress = function (algorithm, parameters, callback, progressCallback) 
 {
     algorithm = (algorithm === '' || algorithm === null) ? '7z' : algorithm;
-    parameters.dll = (parameters.dll === undefined || parameters.dll.trim() === '' || parameters.dll === null) ? path.join('os', 'win', process.arch, '7z.dll') : parameters.dll;
+    parameters.dll = (parameters.dll === undefined || parameters.dll.trim() === '' || parameters.dll === null) ? path.join(__dirname, 'os', 'win', process.arch, '7z.dll') : parameters.dll;
 
     if (parameters.dir !== undefined && parameters.files !== undefined) {
         throw 'Cannot use dir and files property at the same time';
@@ -44,14 +44,14 @@ module.exports.compress = function (algorithm, parameters, callback)
 
 
     if (callback !== null || callback !== undefined) {
-        sevenZip.__compress(algorithm, parameters, callback);
+        sevenZip.__compress(algorithm, parameters, callback, progressCallback);
         return;
     }
 
     return new Promise((resolve, reject) => {
         sevenZip.__compress(algorithm, parameters, (error) => {
             resolve(error);
-        });
+        }, progressCallback);
     });
 }
 
@@ -63,20 +63,20 @@ module.exports.compress = function (algorithm, parameters, callback)
  * 
  * @return {promise} - pending operation
 */
-module.exports.extract = function (algorithm, parameters, callback) 
+module.exports.extract = function (algorithm, parameters, callback, progressCallback) 
 {
     algorithm = (algorithm === '' || algorithm === null) ? '7z' : algorithm;
-    parameters.dll = (parameters.dll === undefined || parameters.dll.trim() === '' || parameters.dll === null) ? path.join('os', 'win', process.arch, '7z.dll') : parameters.dll;
+    parameters.dll = (parameters.dll === undefined || parameters.dll.trim() === '' || parameters.dll === null) ? path.join(__dirname, 'os', 'win', process.arch, '7z.dll') : parameters.dll;
 
 
     if (callback !== null || callback !== undefined) {
-        sevenZip.__extract(algorithm, parameters, callback);
+        sevenZip.__extract(algorithm, parameters, callback, progressCallback);
         return;
     }
 
     return new Promise((resolve, reject) => {
         sevenZip.__extract(algorithm, parameters, (error) => {
             resolve(error);
-        });
+        }, progressCallback);
     });
 }

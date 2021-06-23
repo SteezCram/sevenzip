@@ -24,10 +24,9 @@
                 }]
             ],
             "sources": [
-                "src/algorithm/7z.cc",
-                "src/convert.h",
-                "src/main.cc",
-                "src/algorithm/zip.cc",
+                "src/convert.hpp",
+                "src/main.cpp",
+                "src/worker.hpp",
             ],
             'include_dirs': [
                 "<!@(node -p \"require('node-addon-api').include\")",

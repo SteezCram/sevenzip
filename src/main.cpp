@@ -5,17 +5,14 @@
 #include <string>
 
 
-#include "convert.h"
-#include "algorithm/7z.cc"
-#include "algorithm/tar.cc"
-#include "algorithm/zip.cc"
-#include "algorithm/wim.cc"
+#include "convert.hpp"
+#include "worker.hpp"
 
 
 
 
 /// <summary>
-/// Implementation of the SevenZipCompress method
+/// Implementation of the Compress method
 /// </summary>
 /// 
 /// <param name="info">Parameters passed</param>
@@ -33,6 +30,8 @@ inline Napi::Value Compress (const Napi::CallbackInfo& info)
         files = napi_array_to_vector_wstring(config.Get("files").As<Napi::Array>());
     std::wstring destination = (config.Has("destination")) ? u16string_to_wstring(config.Get("destination").ToString().Utf16Value()) : L"";
     int level = (config.Has("level")) ? config.Get("level").ToNumber().Int32Value() : -1;
+    std::wstring password = (config.Has("password")) ? u16string_to_wstring(config.Get("password").ToString().Utf16Value()) : L"";
+    int is64 = (config.Has("is64")) ? config.Get("is64").ToBoolean() : false;
     
 
     if (std::filesystem::exists(destination))
@@ -41,30 +40,8 @@ inline Napi::Value Compress (const Napi::CallbackInfo& info)
     if (level != -1 && level != 0 && level != 1 && level != 3 && level != 5 && level != 7 && level != 9)
         level = -1;
 
-    if (algorithm == "7z")
-    {
-        std::wstring password = (config.Has("password")) ? u16string_to_wstring(config.Get("password").ToString().Utf16Value()) : L"";
-
-        SevenZipCompressorWorker* wk = new SevenZipCompressorWorker(info[2].As<Napi::Function>(), dll, dir, files, destination, level, password);
-        wk->Queue();
-    }
-    if (algorithm == "tar")
-    {
-        TarCompressorWorker* wk = new TarCompressorWorker(info[2].As<Napi::Function>(), dll, dir, files, destination);
-        wk->Queue();
-    }
-    else if (algorithm == "zip")
-    {
-        bool is64 = (config.Has("is64")) ? config.Get("is64").ToBoolean() : false;
-
-        ZipCompressorWorker* wk = new ZipCompressorWorker(info[2].As<Napi::Function>(), dll, dir, files, destination, level, is64);
-        wk->Queue();
-    }
-    if (algorithm == "wim")
-    {
-        WimCompressorWorker* wk = new WimCompressorWorker(info[2].As<Napi::Function>(), dll, dir, files, destination);
-        wk->Queue();
-    }
+    CompressWorker* wk = new CompressWorker(info[2].As<Napi::Function>(), info[3].As<Napi::Function>(), algorithm, dll, dir, files, destination, level, password, is64);
+    wk->Queue();
 
 
     return info.Env().Undefined();
@@ -85,30 +62,11 @@ inline Napi::Value Extract (const Napi::CallbackInfo& info)
     std::wstring dll = u16string_to_wstring(config.Get("dll").ToString().Utf16Value());
     std::wstring archive = (config.Has("archive")) ? u16string_to_wstring(config.Get("archive").ToString().Utf16Value()) : L"";
     std::wstring destination = (config.Has("destination")) ? u16string_to_wstring(config.Get("destination").ToString().Utf16Value()) : L"";
+    std::wstring password = (config.Has("password")) ? u16string_to_wstring(config.Get("password").ToString().Utf16Value()) : L"";
 
 
-    if (algorithm == "7z")
-    {
-        std::wstring password = (config.Has("password")) ? u16string_to_wstring(config.Get("password").ToString().Utf16Value()) : L"";
-
-        SevenZipExtractWorker* wk = new SevenZipExtractWorker(info[2].As<Napi::Function>(), dll, archive, destination, password);
-        wk->Queue();
-    }
-    else if (algorithm == "tar")
-    {
-        TarExtractWorker* wk = new TarExtractWorker(info[2].As<Napi::Function>(), dll, archive, destination);
-        wk->Queue();
-    }
-    else if (algorithm == "zip")
-    {
-        ZipExtractWorker* wk = new ZipExtractWorker(info[2].As<Napi::Function>(), dll, archive, destination);
-        wk->Queue();
-    }
-    else if (algorithm == "wim")
-    {
-        WimExtractWorker* wk = new WimExtractWorker(info[2].As<Napi::Function>(), dll, archive, destination);
-        wk->Queue();
-    }
+    ExtractWorker* wk = new ExtractWorker(info[2].As<Napi::Function>(), info[3].As<Napi::Function>(), algorithm, dll, archive, destination, password);
+    wk->Queue();
 
 
     return info.Env().Undefined();

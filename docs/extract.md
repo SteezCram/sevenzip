@@ -12,10 +12,10 @@ Extract an archive to the specified destination.
     - `error` `<Error>`
 - `progressCallback` `<Function>`
     - `progress` `<Object>`: progress information
-        - `total` `<Number>`: total bytes to compress
+        - `total` `<Number>`: total bytes to compress _(**Windows** only)_
         - `progress` `<Number>`: progress
-        - `ratio` `<Number>`: compression ratio
-        - `fileProcessed` `<String>`: file currently processed
+        - `ratio` `<Number>`: compression ratio _(**Windows** only)_
+        - `fileProcessed` `<String>`: file currently processed _(on **Linux** and **Mac** it seems not accurate)_
 
 ## Exemple
 ```js

@@ -1,7 +1,5 @@
 const fs = require('fs');
-const preGyp = require('@mapbox/node-pre-gyp');
 const path = require('path');
-const sevenZip = require(preGyp.find(path.resolve(path.join(__dirname,'./package.json'))));
 
 
 
@@ -29,7 +27,6 @@ module.exports.CompressionLevel = {
 module.exports.compress = function (algorithm, parameters, callback, progressCallback) 
 {
     algorithm = (algorithm === '' || algorithm === null) ? '7z' : algorithm;
-    parameters.dll = (parameters.dll === undefined || parameters.dll.trim() === '' || parameters.dll === null) ? path.join(__dirname, 'os', 'win', process.arch, '7z.dll') : parameters.dll;
 
     if (parameters.dir !== undefined && parameters.files !== undefined) {
         throw 'Cannot use dir and files property at the same time';
@@ -43,16 +40,78 @@ module.exports.compress = function (algorithm, parameters, callback, progressCal
     }
 
 
-    if (callback !== null && callback !== undefined) {
-        sevenZip.__compress(algorithm, parameters, callback, progressCallback);
-        return;
-    }
+    switch (process.platform)
+    {
+        case 'win32':
+            // Platform specific module to load
+            const preGyp = require('@mapbox/node-pre-gyp');
+            const sevenZip = require(preGyp.find(path.resolve(path.join(__dirname,'./package.json'))));
 
-    return new Promise((resolve, reject) => {
-        sevenZip.__compress(algorithm, parameters, (error) => {
-            resolve(error);
-        }, progressCallback);
-    });
+
+
+
+            parameters.dll = (parameters.dll === undefined || parameters.dll.trim() === '' || parameters.dll === null) ? path.join(__dirname, 'os', platformToOSName(), process.arch, '7z.dll') : parameters.dll;
+
+            if (callback !== null && callback !== undefined) {
+                sevenZip.__compress(algorithm, parameters, callback, progressCallback);
+                return;
+            }
+        
+            return new Promise((resolve, reject) => {
+                sevenZip.__compress(algorithm, parameters, (error) => {
+                    resolve(error);
+                }, progressCallback);
+            });
+
+        default:
+            // Platform specific module to load
+            const child_process = require('child_process');
+
+
+
+
+            parameters.dll = (parameters.dll === undefined || parameters.dll.trim() === '' || parameters.dll === null) ? path.join(__dirname, 'os', platformToOSName(), process.arch, '7zz') : parameters.dll;
+
+            if (callback !== null && callback !== undefined) 
+            {
+                const sevenZipProcess = child_process.execFile(parameters.dll, buildCommandArgs('compress', parameters, algorithm), {shell: true, detached: false}, (error, stdout, stderr) => {
+                    callback(error);
+                });
+
+                var send = false;
+                sevenZipProcess.stdout.on('data', (data) => {
+                    if (data.includes('1%'))
+                        send = true;
+                    else if (data.includes('99%'))
+                        send = false;
+
+                    if (send) {
+                        progressCallback(parseProgress(data));
+                    }
+                });
+                return;
+            }
+            
+            return new Promise((resolve, reject) => 
+            {
+                const sevenZipProcess = child_process.execFile(parameters.dll, buildCommandArgs('compress', parameters, algorithm), {shell: true, detached: false}, (error, stdout, stderr) => {
+                    resolve(error);
+                });
+
+                var send = false;
+                sevenZipProcess.stdout.on('data', (data) => {
+                    if (data.includes('1%'))
+                        send = true;
+                    else if (data.includes('99%'))
+                        send = false;
+
+                    if (send) {
+                        progressCallback(parseProgress(data));
+                    }
+                });
+            });
+
+    }
 }
 
 /**
@@ -66,17 +125,171 @@ module.exports.compress = function (algorithm, parameters, callback, progressCal
 module.exports.extract = function (algorithm, parameters, callback, progressCallback) 
 {
     algorithm = (algorithm === '' || algorithm === null) ? '7z' : algorithm;
-    parameters.dll = (parameters.dll === undefined || parameters.dll.trim() === '' || parameters.dll === null) ? path.join(__dirname, 'os', 'win', process.arch, '7z.dll') : parameters.dll;
+
+    switch (process.platform)
+    {
+        case 'win32':
+            // Platform specific module to load
+            const preGyp = require('@mapbox/node-pre-gyp');
+            const sevenZip = require(preGyp.find(path.resolve(path.join(__dirname,'./package.json'))));
 
 
-    if (callback !== null && callback !== undefined) {
-        sevenZip.__extract(algorithm, parameters, callback, progressCallback);
-        return;
+
+            
+            parameters.dll = (parameters.dll === undefined || parameters.dll.trim() === '' || parameters.dll === null) ? path.join(__dirname, 'os', platformToOSName(), process.arch, '7z.dll') : parameters.dll;
+
+            if (callback !== null && callback !== undefined) {
+                sevenZip.__extract(algorithm, parameters, callback, progressCallback);
+                return;
+            }
+        
+            return new Promise((resolve, reject) => {
+                sevenZip.__extract(algorithm, parameters, (error) => {
+                    resolve(error);
+                }, progressCallback);
+            });
+
+        default:
+            // Platform specific module to load
+            const child_process = require('child_process');
+
+
+
+
+            parameters.dll = (parameters.dll === undefined || parameters.dll.trim() === '' || parameters.dll === null) ? path.join(__dirname, 'os', platformToOSName(), process.arch, '7zz') : parameters.dll;
+            
+            if (callback !== null && callback !== undefined) 
+            {
+                const sevenZipProcess = child_process.execFile(parameters.dll, buildCommandArgs('extract', parameters), {shell: true, detached: false}, (error, stdout, stderr) => {
+                    callback(error);
+                });
+
+                var send = false;
+                sevenZipProcess.stdout.on('data', (data) => {
+                    if (data.includes('1%'))
+                        send = true;
+                    else if (data.includes('99%'))
+                        send = false;
+
+                    if (send) {
+                        progressCallback(parseProgress(data));
+                    }
+                });
+                return;
+            }
+            
+            return new Promise((resolve, reject) => 
+            {
+                const sevenZipProcess = child_process.execFile(parameters.dll, buildCommandArgs('extract', parameters), {shell: true, detached: false}, (error, stdout, stderr) => {
+                    resolve(error);
+                });
+                
+                var send = false;
+                sevenZipProcess.stdout.on('data', (data) => {
+                    if (data.includes('1%'))
+                        send = true;
+                    else if (data.includes('99%'))
+                        send = false;
+
+                    if (send) {
+                        progressCallback(parseProgress(data));
+                    }
+                });
+            });
+    }
+}
+
+
+
+
+/** Build the command line
+ * 
+ * @param {string} operation - operation to do
+ * @param {object} parameters - parameters to use
+ * @param {string} algorithm - operation to do
+ * 
+ * @return {string} - command line
+ */
+function buildCommandArgs(operation, parameters, algorithm = undefined)
+{
+    var arguments = [operation === 'compress' ? 'a' : 'x'];
+
+    switch (operation) 
+    {
+        case 'compress':
+            arguments.push(`-t${algorithm}`)
+            arguments.push(`"${parameters.destination}"`);
+            arguments.push(`"${parameters.dir}"`);
+
+            if (algorithm === '7z')
+            {
+                arguments.push('-m0=LZMA2');
+
+                if (parameters.level !== undefined)
+                    arguments.push(`-mx${parameters.level}`);
+                
+                if (parameters.password !== undefined)
+                    arguments.push(`-p${parameters.password}`)
+            }
+
+            if (algorithm === 'zip')
+            {
+                if (parameters.is64 !== undefined && parameters.is64)
+                    arguments.push('-mm=Deflate64');
+                else
+                    arguments.push('-mm=Deflate');
+
+                if (parameters.level !== undefined)
+                    arguments.push(`-mx${parameters.level}`);
+            }
+            break;
+
+        case 'extract':
+            arguments.push(`"${parameters.archive}"`);
+            arguments.push(`-o"${parameters.destination}"`);
+            arguments.push('-aoa');
+            break;
     }
 
-    return new Promise((resolve, reject) => {
-        sevenZip.__extract(algorithm, parameters, (error) => {
-            resolve(error);
-        }, progressCallback);
-    });
+
+    arguments.push('-bsp1');
+    return arguments;
+}
+
+/** Parse the stdout data to a progress object
+ * 
+ * @param {string} data - data to parse
+ * 
+ * @return {object} - progress callback object
+ */
+function parseProgress(data)
+{
+    data = data.trim();
+    const dataArr = data.split(' ');
+
+    return {
+        progress: parseInt(dataArr[dataArr.length - 4].slice(0, -1), 10),
+        fileProcessed: dataArr[dataArr.length - 1],
+    }
+}
+
+/** Convert the platform name to the OS name
+ * 
+ * @return {string} - OS name
+ */
+function platformToOSName() 
+{
+    switch (process.platform) 
+    {
+        case 'win32':
+            return 'win';
+
+        case 'darwin':
+            return 'mac';
+
+        case 'linux':
+            return 'linux';
+    }
+
+    return 'none';
 }

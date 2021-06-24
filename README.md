@@ -7,7 +7,7 @@ I cannot find any NPM module that can compress in LZMA easily. They usally bind 
 
 ## Dependencies
 I use [bit7z](https://github.com/rikyoz/bit7z) to wrap the DLL. It provides an easy way to do it. 
-Currently the library is only available for Windows since bit7z is only available for it.
+**Currently the library is only available for Windows since bit7z is only available for it.**
 I will work on a current implementation for Linux through p7zip.
 
 ## Installation

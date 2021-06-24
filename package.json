@@ -1,6 +1,6 @@
 {
   "name": "sevenzip-node",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "7-Zip native wrapper around 7z.dll",
   "homepage": "https://github.com/SteezCram/sevenzip-node",
   "repository": {
@@ -16,7 +16,7 @@
   "gypfile": true,
   "scripts": {
     "start": "node index.js",
-    "test": "node ./test/compress.test.js",
+    "test": "mocha",
     "build": "node-pre-gyp build --build-from-source",
     "clean": "node-gyp clean",
     "install": "node-pre-gyp install --fallback-to-build"
@@ -24,6 +24,7 @@
   "author": "Thomas Croizet (Steez)",
   "license": "MIT",
   "devDependencies": {
+    "mocha": "^9.0.1",
     "node-gyp": "^8.0.0"
   },
   "dependencies": {

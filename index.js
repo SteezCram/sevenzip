@@ -43,7 +43,7 @@ module.exports.compress = function (algorithm, parameters, callback, progressCal
     }
 
 
-    if (callback !== null || callback !== undefined) {
+    if (callback !== null && callback !== undefined) {
         sevenZip.__compress(algorithm, parameters, callback, progressCallback);
         return;
     }
@@ -69,7 +69,7 @@ module.exports.extract = function (algorithm, parameters, callback, progressCall
     parameters.dll = (parameters.dll === undefined || parameters.dll.trim() === '' || parameters.dll === null) ? path.join(__dirname, 'os', 'win', process.arch, '7z.dll') : parameters.dll;
 
 
-    if (callback !== null || callback !== undefined) {
+    if (callback !== null && callback !== undefined) {
         sevenZip.__extract(algorithm, parameters, callback, progressCallback);
         return;
     }

@@ -1,6 +1,6 @@
 {
   "name": "sevenzip-node",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "7-Zip native wrapper around 7z.dll and 7zz",
   "homepage": "https://github.com/SteezCram/sevenzip-node",
   "repository": {
@@ -17,7 +17,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "mocha",
-    "preinstall": "npm install node-pre-gyp",
+    "preinstall": "npm install @mapbox/node-pre-gyp",
     "install": "node-pre-gyp install ---build-from-source",
     "build": "node-pre-gyp install --build-from-source",
     "clean": "node-pre-gyp clean"

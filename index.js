@@ -26,17 +26,22 @@ module.exports.CompressionLevel = {
 */
 module.exports.compress = function (algorithm, parameters, callback, progressCallback) 
 {
-    algorithm = (algorithm === '' || algorithm === null) ? '7z' : algorithm;
-
-    if (parameters.dir !== undefined && parameters.files !== undefined) {
+    if (!parameters)
+        throw 'Parameters cannot be undefined or null';
+    if (parameters.dir && parameters.files)
         throw 'Cannot use dir and files property at the same time';
-    }
 
-    if (fs.lstatSync(parameters.destination).isDirectory()) {
-        if (parameters.dir === undefined)
-            throw 'Destination is a directory';
+    algorithm = (algorithm === '' || algorithm === null || algorithm === undefined) ? '7z' : algorithm;
 
-        parameters.destination = path.join(parameters.destination, `${path.basename(parameters.dir)}.${algorithm}`);
+    if (fs.existsSync(parameters.destination)) 
+    {
+        if (fs.lstatSync(parameters.destination).isDirectory()) 
+        {
+            if (parameters.dir === undefined)
+                throw 'Destination is a directory';
+    
+            parameters.destination = path.join(parameters.destination, `${path.basename(parameters.dir)}.${algorithm}`);
+        }
     }
 
 
@@ -53,14 +58,14 @@ module.exports.compress = function (algorithm, parameters, callback, progressCal
             parameters.dll = (parameters.dll === undefined || parameters.dll.trim() === '' || parameters.dll === null) ? path.join(__dirname, 'os', platformToOSName(), process.arch, '7z.dll') : parameters.dll;
 
             if (callback !== null && callback !== undefined) {
-                sevenZip.__compress(algorithm, parameters, callback, progressCallback);
+                sevenZip.__compress(algorithm, parameters, callback, progressCallback === undefined || progressCallback === null ? (progress) => {} : progressCallback);
                 return;
             }
         
             return new Promise((resolve, reject) => {
                 sevenZip.__compress(algorithm, parameters, (error) => {
                     resolve(error);
-                }, progressCallback);
+                }, progressCallback === undefined || progressCallback === null ? (progress) => {} : progressCallback);
             });
 
         default:
@@ -105,7 +110,7 @@ module.exports.compress = function (algorithm, parameters, callback, progressCal
                     else if (data.includes('99%'))
                         send = false;
 
-                    if (send) {
+                    if (send && progressCallback !== undefined && progressCallback !== null) {
                         progressCallback(parseProgress(data));
                     }
                 });
@@ -124,6 +129,9 @@ module.exports.compress = function (algorithm, parameters, callback, progressCal
 */
 module.exports.extract = function (algorithm, parameters, callback, progressCallback) 
 {
+    if (!parameters)
+        throw 'Parameters cannot be undefined or null';
+
     algorithm = (algorithm === '' || algorithm === null) ? '7z' : algorithm;
 
     switch (process.platform)
@@ -139,14 +147,14 @@ module.exports.extract = function (algorithm, parameters, callback, progressCall
             parameters.dll = (parameters.dll === undefined || parameters.dll.trim() === '' || parameters.dll === null) ? path.join(__dirname, 'os', platformToOSName(), process.arch, '7z.dll') : parameters.dll;
 
             if (callback !== null && callback !== undefined) {
-                sevenZip.__extract(algorithm, parameters, callback, progressCallback);
+                sevenZip.__extract(algorithm, parameters, callback, progressCallback === undefined || progressCallback === null ? (progress) => {} : progressCallback);
                 return;
             }
         
             return new Promise((resolve, reject) => {
                 sevenZip.__extract(algorithm, parameters, (error) => {
                     resolve(error);
-                }, progressCallback);
+                }, progressCallback === undefined || progressCallback === null ? (progress) => {} : progressCallback);
             });
 
         default:
@@ -171,7 +179,7 @@ module.exports.extract = function (algorithm, parameters, callback, progressCall
                     else if (data.includes('99%'))
                         send = false;
 
-                    if (send) {
+                    if (send && progressCallback !== undefined && progressCallback !== null) {
                         progressCallback(parseProgress(data));
                     }
                 });

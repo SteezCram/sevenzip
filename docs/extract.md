@@ -4,7 +4,7 @@ Extract an archive to the specified destination.
 
 - `algorithm` `<String>`: select the algorithm to use, values possible are: `7z`, `zip`, `tar`, `wim`
 - `parameters` `<Object>`: parameters object to send
-    - `dll` `<String>`: DLL path to use. If not specified, use the provided DLL file. _(global)_
+    - `dll` `<String>`: DLL path to use. If not specified, use the provided DLL file. _(global, for **Linux** and **Mac** it's the path of the command line executable)_
     - `archive` `<String>`: archive to extract. _(global)_
     - `destination` `<String>`: directory to extract the files. _(global)_
     - `password` `<String>`: password to use to compress the archive. _(`7z` only)_

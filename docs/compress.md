@@ -1,6 +1,6 @@
 # compress(algorithm, parameters[, callback])
 
-Compress a whole directory or some files. If the destination exists, it will be overwrite.
+Compress a whole directory or some files. If the destination exists, it will be overwritten.
 
 - `algorithm` `<String>`: select the algorithm to use, values possible are: `7z`, `zip`, `tar`, `wim`
 - `parameters` `<Object>`: parameters object to send

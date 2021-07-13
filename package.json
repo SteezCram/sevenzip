@@ -17,6 +17,8 @@
   "scripts": {
     "start": "node index.js",
     "test": "mocha",
+    "preinstall": "npm install node-pre-gyp",
+    "install": "node-pre-gyp install ---build-from-source",
     "build": "node-pre-gyp install --build-from-source",
     "clean": "node-pre-gyp clean"
   },
@@ -28,14 +30,20 @@
   },
   "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.5",
-    "node-addon-api": "^4.0.0"
+    "node-addon-api": "^4.0.0",
+    "node-pre-gyp": "^0.17.0"
   },
   "keywords": [
     "7z",
-    "7za",
     "sevenzip",
     "LZMA",
     "LZMA2",
-    "compress"
+    "Deflate",
+    "tar",
+    "wim",
+    "zip",
+    "compress",
+    "extract",
+    "archive"
   ]
 }

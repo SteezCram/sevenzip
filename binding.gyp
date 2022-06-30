@@ -2,7 +2,7 @@
     "targets": 
     [
         {
-            "target_name": "sevenzip-node",
+            "target_name": "sevenzip",
             "cflags!": [ "-fno-exceptions" ],
             "cflags_cc!": [ "-fno-exceptions", "-std=c++17" ],
             "conditions": 

@@ -132,3 +132,4 @@ dist
 
 # node-gyp
 build/
+lib/

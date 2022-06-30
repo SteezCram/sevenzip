@@ -24,7 +24,7 @@ module.exports.CompressionLevel = {
  * 
  * @return {promise} - pending operation
 */
-module.exports.compress = async function (algorithm, parameters, callback, progressCallback) 
+module.exports.compress = function (algorithm, parameters, callback, progressCallback) 
 {
     if (!parameters)
         throw 'Parameters cannot be undefined or null';
@@ -33,18 +33,13 @@ module.exports.compress = async function (algorithm, parameters, callback, progr
 
     algorithm = (algorithm === '' || algorithm === null || algorithm === undefined) ? '7z' : algorithm;
 
-    try {
-        await fs.promises.access(parameters.destination);
-
-        if (await fs.promises.lstat(parameters.destination).isDirectory()) {
+    if (fs.existsSync(parameters.destination)) {
+        if (fs.lstatSync(parameters.destination).isDirectory()) {
             if (parameters.dir === undefined)
                 throw 'Destination is a directory';
     
             parameters.destination = path.join(parameters.destination, `${path.basename(parameters.dir)}.${algorithm}`);
         }
-    }
-    catch {
-        // No error, the destination need to be created
     }
 
 

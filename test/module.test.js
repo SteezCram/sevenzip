@@ -6,8 +6,8 @@ const sevenZip = require('../index');
 
 
 // TO CHANGE TO FIT WITH YOUR TEST !!!
-const DIR_TO_COMPRESS = 'C:\\Users\\tcroi\\Desktop\\DCSB-4.0.0.9';
-const DESTINATION = 'C:\\Users\\tcroi\\Desktop\\';
+const DIR_TO_COMPRESS = 'C:\\Users\\thomas\\Desktop\\HWInfo';
+const DESTINATION = 'C:\\Users\\thomas\\Desktop\\';
 
 
 describe('compression test', function()

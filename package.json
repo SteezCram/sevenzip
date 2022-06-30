@@ -8,7 +8,7 @@
     "url": "git://github.com/SteezCram/sevenzip.git"
   },
   "binary": {
-    "module_name": "@steezcram/sevenzip",
+    "module_name": "sevenzip",
     "module_path": "./lib/{platform}/{arch}",
     "host": "undefined"
   },

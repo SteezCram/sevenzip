@@ -18,7 +18,7 @@
 /// <param name="info">Parameters passed</param>
 /// 
 /// <returns>Undefined value</returns>
-inline Napi::Value Compress (const Napi::CallbackInfo& info)
+inline Napi::Value Compress(const Napi::CallbackInfo& info)
 {
     std::string algorithm = info[0].ToString();
 
@@ -54,7 +54,7 @@ inline Napi::Value Compress (const Napi::CallbackInfo& info)
 /// <param name="info">Parameters passed</param>
 /// 
 /// <returns>Undefined value</returns>
-inline Napi::Value Extract (const Napi::CallbackInfo& info)
+inline Napi::Value Extract(const Napi::CallbackInfo& info)
 {
     std::string algorithm = info[0].ToString();
 

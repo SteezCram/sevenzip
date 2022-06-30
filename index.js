@@ -24,7 +24,7 @@ module.exports.CompressionLevel = {
  * 
  * @return {promise} - pending operation
 */
-module.exports.compress = function (algorithm, parameters, callback, progressCallback) 
+module.exports.compress = async function (algorithm, parameters, callback, progressCallback) 
 {
     if (!parameters)
         throw 'Parameters cannot be undefined or null';
@@ -33,15 +33,18 @@ module.exports.compress = function (algorithm, parameters, callback, progressCal
 
     algorithm = (algorithm === '' || algorithm === null || algorithm === undefined) ? '7z' : algorithm;
 
-    if (fs.existsSync(parameters.destination)) 
-    {
-        if (fs.lstatSync(parameters.destination).isDirectory()) 
-        {
+    try {
+        await fs.promises.access(parameters.destination);
+
+        if (await fs.promises.lstat(parameters.destination).isDirectory()) {
             if (parameters.dir === undefined)
                 throw 'Destination is a directory';
     
             parameters.destination = path.join(parameters.destination, `${path.basename(parameters.dir)}.${algorithm}`);
         }
+    }
+    catch {
+        // No error, the destination need to be created
     }
 
 
@@ -50,7 +53,7 @@ module.exports.compress = function (algorithm, parameters, callback, progressCal
         case 'win32':
             // Platform specific module to load
             const preGyp = require('@mapbox/node-pre-gyp');
-            const sevenZip = require(preGyp.find(path.resolve(path.join(__dirname,'./package.json'))));
+            const sevenZip = require(preGyp.find(path.resolve(path.join(__dirname, './package.json'))));
 
 
 
@@ -58,14 +61,14 @@ module.exports.compress = function (algorithm, parameters, callback, progressCal
             parameters.dll = (parameters.dll === undefined || parameters.dll.trim() === '' || parameters.dll === null) ? path.join(__dirname, 'os', platformToOSName(), process.arch, '7z.dll') : parameters.dll;
 
             if (callback !== null && callback !== undefined) {
-                sevenZip.__compress(algorithm, parameters, callback, progressCallback === undefined || progressCallback === null ? (progress) => {} : progressCallback);
+                sevenZip.__compress(algorithm, parameters, callback, progressCallback === undefined || progressCallback === null ? () => {} : progressCallback);
                 return;
             }
         
             return new Promise((resolve, reject) => {
                 sevenZip.__compress(algorithm, parameters, (error) => {
                     resolve(error);
-                }, progressCallback === undefined || progressCallback === null ? (progress) => {} : progressCallback);
+                }, progressCallback === undefined || progressCallback === null ? () => {} : progressCallback);
             });
 
         default:
@@ -83,12 +86,14 @@ module.exports.compress = function (algorithm, parameters, callback, progressCal
                     callback(error);
                 });
 
-                var send = false;
+                let send = false;
                 sevenZipProcess.stdout.on('data', (data) => {
-                    if (data.includes('1%'))
+                    if (data.includes('1%')) {
                         send = true;
-                    else if (data.includes('99%'))
+                    }
+                    else if (data.includes('99%')) {
                         send = false;
+                    }
 
                     if (send) {
                         progressCallback(parseProgress(data));
@@ -103,7 +108,7 @@ module.exports.compress = function (algorithm, parameters, callback, progressCal
                     resolve(error);
                 });
 
-                var send = false;
+                let send = false;
                 sevenZipProcess.stdout.on('data', (data) => {
                     if (data.includes('1%'))
                         send = true;
@@ -139,7 +144,7 @@ module.exports.extract = function (algorithm, parameters, callback, progressCall
         case 'win32':
             // Platform specific module to load
             const preGyp = require('@mapbox/node-pre-gyp');
-            const sevenZip = require(preGyp.find(path.resolve(path.join(__dirname,'./package.json'))));
+            const sevenZip = require(preGyp.find(path.resolve(path.join(__dirname, './package.json'))));
 
 
 
@@ -147,14 +152,14 @@ module.exports.extract = function (algorithm, parameters, callback, progressCall
             parameters.dll = (parameters.dll === undefined || parameters.dll.trim() === '' || parameters.dll === null) ? path.join(__dirname, 'os', platformToOSName(), process.arch, '7z.dll') : parameters.dll;
 
             if (callback !== null && callback !== undefined) {
-                sevenZip.__extract(algorithm, parameters, callback, progressCallback === undefined || progressCallback === null ? (progress) => {} : progressCallback);
+                sevenZip.__extract(algorithm, parameters, callback, progressCallback === undefined || progressCallback === null ? () => {} : progressCallback);
                 return;
             }
         
             return new Promise((resolve, reject) => {
                 sevenZip.__extract(algorithm, parameters, (error) => {
                     resolve(error);
-                }, progressCallback === undefined || progressCallback === null ? (progress) => {} : progressCallback);
+                }, progressCallback === undefined || progressCallback === null ? () => {} : progressCallback);
             });
 
         default:
@@ -172,12 +177,14 @@ module.exports.extract = function (algorithm, parameters, callback, progressCall
                     callback(error);
                 });
 
-                var send = false;
+                let send = false;
                 sevenZipProcess.stdout.on('data', (data) => {
-                    if (data.includes('1%'))
+                    if (data.includes('1%')) {
                         send = true;
-                    else if (data.includes('99%'))
+                    }
+                    else if (data.includes('99%')) {
                         send = false;
+                    }
 
                     if (send && progressCallback !== undefined && progressCallback !== null) {
                         progressCallback(parseProgress(data));
@@ -192,7 +199,7 @@ module.exports.extract = function (algorithm, parameters, callback, progressCall
                     resolve(error);
                 });
                 
-                var send = false;
+                let send = false;
                 sevenZipProcess.stdout.on('data', (data) => {
                     if (data.includes('1%'))
                         send = true;
@@ -220,7 +227,7 @@ module.exports.extract = function (algorithm, parameters, callback, progressCall
  */
 function buildCommandArgs(operation, parameters, algorithm = undefined)
 {
-    var arguments = [operation === 'compress' ? 'a' : 'x'];
+    const arguments = [operation === 'compress' ? 'a' : 'x'];
 
     switch (operation) 
     {

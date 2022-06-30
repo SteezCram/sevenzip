@@ -1,6 +1,6 @@
-# sevenzip-node
+# sevenzip
 
-`sevenzip-node` is a wrapper around `7z.dll` or `7za.dll` for **Windows** and `7zz` for **Linux** and **Mac**. The goal is to provide a unique and an easy way to compress and extract multiple archives format.
+`sevenzip` is a wrapper around `7z.dll` or `7za.dll` for **Windows** and `7zz` for **Linux** and **Mac**. The goal is to provide a unique and an easy way to compress and extract multiple archives format.
 
 ## Motivation
 I cannot find any NPM module that can compress in LZMA easily. They usally bind the command line without any modification to understand it better.
@@ -12,19 +12,19 @@ The platform support for **Linux** and **Mac** is done by using 7zz. It's a comm
 
 ## Installation
 ```
-npm install sevenzip-node
+npm install sevenzip
 ```
 
 ## Usage
 Simply include the module with this code:
 ```js
-const sevenZip = require('sevenzip-node');
+const sevenzip = require('sevenzip');
 ```
 
 ## Documentation
 ### Methods
-- [compress](https://github.com/SteezCram/sevenzip-node/blob/main/docs/compress.md)
-- [extract](https://github.com/SteezCram/sevenzip-node/blob/main/docs/extract.md)
+- [compress](https://github.com/SteezCram/sevenzip/blob/main/docs/compress.md)
+- [extract](https://github.com/SteezCram/sevenzip/blob/main/docs/extract.md)
 
 ### Objects
-- [CompressionLevel](https://github.com/SteezCram/sevenzip-node/blob/main/docs/CompressionLevel.md)
+- [CompressionLevel](https://github.com/SteezCram/sevenzip/blob/main/docs/CompressionLevel.md)

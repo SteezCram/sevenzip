@@ -22,17 +22,17 @@ Compress a whole directory or some files. If the destination exists, it will be 
 
 ## Exemple
 ```js
-const sevenZip = require('sevenzip-node');
+const sevenzip = require('@steezcram/sevenzip');
 
 // By set the destination as a directory, the archive name will be: test.7z
-sevenZip.compress("7z", {dir: 'C:\\Users\\public\\Desktop\\test', destination: 'C:\\Users\\tcroi\\Desktop\\'}, (error) => {
+sevenzip.compress('7z', {dir: 'C:\\Users\\public\\Desktop\\test', destination: 'C:\\Users\\tcroi\\Desktop\\'}, (error) => {
     if (error) throw error;
 }, (progress) => {
     console.log(progress);
 });
 
 // Compress the selected files with Deflate64
-sevenZip.compress("zip", {files: ['C:\\Users\\public\\Desktop\\test\\bigtxt.txt', 'C:\\Users\\public\\Desktop\\test\\bigmp4.mp4'], destination: 'C:\\Users\\tcroi\\Desktop\\test.zip', is64: true}, (error) => {
+sevenzip.compress('zip', {files: ['C:\\Users\\public\\Desktop\\test\\bigtxt.txt', 'C:\\Users\\public\\Desktop\\test\\bigmp4.mp4'], destination: 'C:\\Users\\tcroi\\Desktop\\test.zip', is64: true}, (error) => {
     if (error) throw error;
 }, (progress) => {
     console.log(progress);
@@ -41,16 +41,16 @@ sevenZip.compress("zip", {files: ['C:\\Users\\public\\Desktop\\test\\bigtxt.txt'
 
 ### Using await
 ```js
-const sevenZip = require('sevenzip-node');
+const sevenzip = require('sevenzip');
 
 // By set the destination as a directory, the archive name will be: test.7z
-var error = await sevenZip.compress("7z", {dir: 'C:\\Users\\public\\Desktop\\test', destination: 'C:\\Users\\tcroi\\Desktop\\'}, null, (progress) => {
+let error = await sevenZip.compress('7z', {dir: 'C:\\Users\\public\\Desktop\\test', destination: 'C:\\Users\\tcroi\\Desktop\\'}, null, (progress) => {
     console.log(progress);
 });
 if (error) throw error;
 
 // Compress the selected files with Deflate64
-error = sevenZip.compress("zip", {files: ['C:\\Users\\public\\Desktop\\test\\bigtxt.txt', 'C:\\Users\\public\\Desktop\\test\\bigmp4.mp4'], destination: 'C:\\Users\\tcroi\\Desktop\\test.zip', is64: true}, null, (progress) => {
+error = sevenZip.compress('zip', {files: ['C:\\Users\\public\\Desktop\\test\\bigtxt.txt', 'C:\\Users\\public\\Desktop\\test\\bigmp4.mp4'], destination: 'C:\\Users\\tcroi\\Desktop\\test.zip', is64: true}, null, (progress) => {
     console.log(progress);
 });
 if (error) throw error;

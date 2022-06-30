@@ -12,7 +12,7 @@ _Note: all the level different from this enum fallback to the normal level._
 
 ## Exemple
 ```js
-const sevenZip = require('sevenzip-node');
+const sevenzip = require('@steezcram/sevenzip');
 
-const ultraLevel = sevenZip.CompressionLevel.ULTRA;
+const ultraLevel = sevenzip.CompressionLevel.ULTRA;
 ```

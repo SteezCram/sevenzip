@@ -19,10 +19,10 @@ Extract an archive to the specified destination.
 
 ## Exemple
 ```js
-const sevenZip = require('sevenzip-node');
+const sevenzip = require('@steezcram/sevenzip');
 
 // By set the destination as a directory, the archive name will be: test.7z
-sevenZip.extract("7z", {archive: 'C:\\Users\\public\\Desktop\\test.7z', destination: 'C:\\Users\\tcroi\\Desktop\\test'}, (error) => {
+sevenzip.extract('7z', {archive: 'C:\\Users\\public\\Desktop\\test.7z', destination: 'C:\\Users\\tcroi\\Desktop\\test'}, (error) => {
     if (error) throw error;
 }, (progress) => {
     console.log(progress);
@@ -31,10 +31,10 @@ sevenZip.extract("7z", {archive: 'C:\\Users\\public\\Desktop\\test.7z', destinat
 
 ### Using await
 ```js
-const sevenZip = require('sevenzip-node');
+const sevenzip = require('@steezcram/sevenzip');
 
 // By set the destination as a directory, the archive name will be: test.7z
-var error = await sevenZip.extract("7z", {archive: 'C:\\Users\\public\\Desktop\\test.7z', destination: 'C:\\Users\\tcroi\\Desktop\\test'}, null, (progress) => {
+const error = await sevenzip.extract('7z', {archive: 'C:\\Users\\public\\Desktop\\test.7z', destination: 'C:\\Users\\tcroi\\Desktop\\test'}, null, (progress) => {
     console.log(progress);
 });
 if (error) throw error;

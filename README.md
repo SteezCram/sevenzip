@@ -18,7 +18,7 @@ npm install sevenzip
 ## Usage
 Simply include the module with this code:
 ```js
-const sevenzip = require('sevenzip');
+const sevenzip = require('@steezcram/sevenzip');
 ```
 
 ## Documentation

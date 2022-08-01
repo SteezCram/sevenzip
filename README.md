@@ -12,7 +12,7 @@ The platform support for **Linux** and **Mac** is done by using 7zz. It's a comm
 
 ## Installation
 ```
-npm install sevenzip
+npm install @steezcram/sevenzip --save
 ```
 
 ## Usage

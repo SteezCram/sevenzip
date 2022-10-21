@@ -16,21 +16,15 @@
   "gypfile": true,
   "scripts": {
     "start": "node index.js",
-    "test": "mocha",
-    "preinstall": "npm install @mapbox/node-pre-gyp",
-    "install": "node-pre-gyp install ---build-from-source",
-    "build": "node-pre-gyp install --build-from-source",
-    "clean": "node-pre-gyp clean"
+    "test": "mocha"
   },
   "author": "Thomas Croizet (Steez)",
   "license": "MIT",
   "devDependencies": {
-    "mocha": "^9.0.1",
-    "node-gyp": "^8.0.0"
+    "mocha": "^9.0.1"
   },
   "dependencies": {
-    "@mapbox/node-pre-gyp": "^1.0.9",
-    "node-addon-api": "^4.0.0"
+    "7zip-bin": "^5.2.0"
   },
   "keywords": [
     "7z",

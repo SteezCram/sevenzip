@@ -2,9 +2,8 @@
 
 Compress a whole directory or some files. If the destination exists, it will be overwritten.
 
-- `algorithm` `<String>`: select the algorithm to use, values possible are: `7z`, `zip`, `tar`, `wim`
+- `algorithm` `<String>`: select the algorithm to use, values possible are: `7z`, `zip`, `tar`
 - `parameters` `<Object>`: parameters object to send
-    - `dll` `<String>`: DLL path to use. If not specified, use the provided DLL file. _(global, for **Linux** and **Mac** it's the path of the command line executable)_
     - `dir` `<String>`: directory to compress. Cannot be with `files` as the same time. _(global)_
     - `files` `<Array>`: files to compress. Cannot be with `dir` as the same time. _(**Windows** only)_
     - `destination` `<String>`: directory or new archive file path. You can use a directory if `dir` is use. _(global)_

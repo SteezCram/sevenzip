@@ -1,3 +1,5 @@
+const sevenZipBin = require('7zip-bin');
+const child_process = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -24,7 +26,7 @@ module.exports.CompressionLevel = {
  * 
  * @return {promise} - pending operation
 */
-module.exports.compress = function (algorithm, parameters, callback, progressCallback) 
+module.exports.compress = function (algorithm, parameters, callback = undefined, progressCallback = undefined) 
 {
     if (!parameters)
         throw 'Parameters cannot be undefined or null';
@@ -43,13 +45,11 @@ module.exports.compress = function (algorithm, parameters, callback, progressCal
     }
 
 
-    // Platform specific module to load
-    const child_process = require('child_process');
-    parameters.dll = (parameters.dll === undefined || parameters.dll.trim() === '' || parameters.dll === null) ? path.join(__dirname, 'os', platformToOSName(), process.arch, '7zz') : parameters.dll;
+    const dllPath = sevenZipBin.path7za;
 
-    if (callback !== null && callback !== undefined) 
+    if (callback) 
     {
-        const sevenZipProcess = child_process.execFile(parameters.dll, buildCommandArgs('compress', parameters, algorithm), {shell: true, detached: false}, (error, stdout, stderr) => {
+        const sevenZipProcess = child_process.execFile(dllPath, buildCommandArgs('compress', parameters, algorithm), {shell: true, detached: false}, (error, stdout, stderr) => {
             callback(error);
         });
 
@@ -72,7 +72,7 @@ module.exports.compress = function (algorithm, parameters, callback, progressCal
 
     return new Promise((resolve, reject) => 
     {
-        const sevenZipProcess = child_process.execFile(parameters.dll, buildCommandArgs('compress', parameters, algorithm), {shell: true, detached: false}, (error, stdout, stderr) => {
+        const sevenZipProcess = child_process.execFile(dllPath, buildCommandArgs('compress', parameters, algorithm), {shell: true, detached: false}, (error, stdout, stderr) => {
             resolve(error);
         });
 
@@ -98,7 +98,7 @@ module.exports.compress = function (algorithm, parameters, callback, progressCal
  * 
  * @return {promise} - pending operation
 */
-module.exports.extract = function (algorithm, parameters, callback, progressCallback) 
+module.exports.extract = function (algorithm, parameters, callback = undefined, progressCallback = undefined) 
 {
     if (!parameters)
         throw 'Parameters cannot be undefined or null';
@@ -106,13 +106,11 @@ module.exports.extract = function (algorithm, parameters, callback, progressCall
     algorithm = (algorithm === '' || algorithm === null) ? '7z' : algorithm;
 
 
-    // Platform specific module to load
-    const child_process = require('child_process');
-    parameters.dll = (parameters.dll === undefined || parameters.dll.trim() === '' || parameters.dll === null) ? path.join(__dirname, 'os', platformToOSName(), process.arch, '7zz') : parameters.dll;
+    const dllPath = sevenZipBin.path7za;
 
-    if (callback !== null && callback !== undefined) 
+    if (callback) 
     {
-        const sevenZipProcess = child_process.execFile(parameters.dll, buildCommandArgs('extract', parameters), {shell: true, detached: false}, (error, stdout, stderr) => {
+        const sevenZipProcess = child_process.execFile(dllPath, buildCommandArgs('extract', parameters), {shell: true, detached: false}, (error, stdout, stderr) => {
             callback(error);
         });
 
@@ -134,7 +132,7 @@ module.exports.extract = function (algorithm, parameters, callback, progressCall
 
     return new Promise((resolve, reject) => 
     {
-        const sevenZipProcess = child_process.execFile(parameters.dll, buildCommandArgs('extract', parameters), {shell: true, detached: false}, (error, stdout, stderr) => {
+        const sevenZipProcess = child_process.execFile(dllPath, buildCommandArgs('extract', parameters), {shell: true, detached: false}, (error, stdout, stderr) => {
             resolve(error);
         });
         

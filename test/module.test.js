@@ -1,13 +1,14 @@
 const assert = require('assert');
 const fs = require('fs');
+const path = require('path');
 const sevenZip = require('../index');
 
 
 
 
 // TO CHANGE TO FIT WITH YOUR TEST !!!
-const DIR_TO_COMPRESS = 'C:\\Users\\thomas\\Desktop\\HWInfo';
-const DESTINATION = 'C:\\Users\\thomas\\Desktop\\';
+const DIR_TO_COMPRESS = __dirname;
+const DESTINATION = path.join(__dirname, 'data');
 
 
 describe('compression test', function()
@@ -16,19 +17,15 @@ describe('compression test', function()
     this.timeout(100000);
 
     it('7z compress', async function() {
-        assert.equal(await sevenZip.compress("7z", {dir: DIR_TO_COMPRESS, destination: DESTINATION}), undefined);
+        assert.equal(await sevenZip.compress('7z', {dir: DIR_TO_COMPRESS, destination: DESTINATION}), undefined, undefined);
     });
 
     it('tar compress', async function() {
-        assert.equal(await sevenZip.compress("tar", {dir: DIR_TO_COMPRESS, destination: DESTINATION}), undefined);
-    });
-
-    it('wim compress', async function() {
-        assert.equal(await sevenZip.compress("wim", {dir: DIR_TO_COMPRESS, destination: DESTINATION}), undefined);
+        assert.equal(await sevenZip.compress('tar', {dir: DIR_TO_COMPRESS, destination: DESTINATION}), undefined, undefined);
     });
 
     it('zip compress', async function() {
-        assert.equal(await sevenZip.compress("zip", {dir: DIR_TO_COMPRESS, destination: DESTINATION}), undefined);
+        assert.equal(await sevenZip.compress('zip', {dir: DIR_TO_COMPRESS, destination: DESTINATION}), undefined, undefined);
     });
 });
 
@@ -38,30 +35,23 @@ describe('extract test', function()
     this.timeout(100000);
 
     it('7z extract', async function() {
-        assert.equal(await sevenZip.extract("7z", {archive: `${DIR_TO_COMPRESS}.7z`, destination: DESTINATION}), undefined);
+        assert.equal(await sevenZip.extract('7z', {archive: path.join(DESTINATION, `${path.basename(DIR_TO_COMPRESS)}.7z`), destination: DESTINATION}), undefined, undefined);
 
         // Delete the file to save space on the disk
-        fs.unlinkSync(`${DIR_TO_COMPRESS}.7z`);
+        fs.unlinkSync(path.join(DESTINATION, `${path.basename(DIR_TO_COMPRESS)}.7z`));
     });
 
     it('tar extract', async function() {
-        assert.equal(await sevenZip.extract("tar", {archive: `${DIR_TO_COMPRESS}.tar`, destination: DESTINATION}), undefined);
+        assert.equal(await sevenZip.extract('tar', {archive: path.join(DESTINATION, `${path.basename(DIR_TO_COMPRESS)}.tar`), destination: DESTINATION}), undefined, undefined);
 
         // Delete the file to save space on the disk
-        fs.unlinkSync(`${DIR_TO_COMPRESS}.tar`);
-    });
-
-    it('wim extract', async function() {
-        assert.equal(await sevenZip.extract("wim", {archive: `${DIR_TO_COMPRESS}.wim`, destination: DESTINATION}), undefined);
-
-        // Delete the file to save space on the disk
-        fs.unlinkSync(`${DIR_TO_COMPRESS}.wim`);
+        fs.unlinkSync(path.join(DESTINATION, `${path.basename(DIR_TO_COMPRESS)}.tar`));
     });
 
     it('zip extract', async function() {
-        assert.equal(await sevenZip.extract("zip", {archive: `${DIR_TO_COMPRESS}.zip`, destination: DESTINATION}), undefined);
+        assert.equal(await sevenZip.extract('zip', {archive: path.join(DESTINATION, `${path.basename(DIR_TO_COMPRESS)}.zip`), destination: DESTINATION}), undefined, undefined);
 
         // Delete the file to save space on the disk
-        fs.unlinkSync(`${DIR_TO_COMPRESS}.zip`);
+        fs.unlinkSync(path.join(DESTINATION, `${path.basename(DIR_TO_COMPRESS)}.zip`));
     });
 });

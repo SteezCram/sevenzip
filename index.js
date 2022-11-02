@@ -172,26 +172,28 @@ function buildCommandArgs(operation, parameters, algorithm = undefined)
             arguments.push(`"${parameters.destination}"`);
             arguments.push(`"${parameters.dir}"`);
 
-            if (algorithm === '7z')
+            switch (algorithm)
             {
-                arguments.push('-m0=LZMA2');
+                case '7z':
+                case 'xz':
+                    arguments.push('-m0=LZMA2');
 
-                if (parameters.level !== undefined)
-                    arguments.push(`-mx${parameters.level}`);
-                
-                if (parameters.password !== undefined)
-                    arguments.push(`-p${parameters.password}`)
-            }
+                    if (parameters.level !== undefined)
+                        arguments.push(`-mx=${parameters.level}`);
+                    
+                    if (parameters.password !== undefined)
+                        arguments.push(`-p${parameters.password}`)
+                    break;
+                    
+                case 'zip':
+                    if (parameters.is64 !== undefined && parameters.is64)
+                        arguments.push('-mm=Deflate64');
+                    else
+                        arguments.push('-mm=Deflate');
 
-            if (algorithm === 'zip')
-            {
-                if (parameters.is64 !== undefined && parameters.is64)
-                    arguments.push('-mm=Deflate64');
-                else
-                    arguments.push('-mm=Deflate');
-
-                if (parameters.level !== undefined)
-                    arguments.push(`-mx${parameters.level}`);
+                    if (parameters.level !== undefined)
+                        arguments.push(`-mx=${parameters.level}`);
+                    break;
             }
             break;
 
@@ -219,7 +221,7 @@ function parseProgress(data)
     const dataArr = data.split(' ');
 
     return {
-        progress: parseInt(dataArr[dataArr.length - 4].slice(0, -1), 10),
-        fileProcessed: dataArr[dataArr.length - 1],
+        progress: parseInt(dataArr[0].slice(0, -1), 10),
+        fileProcessed: dataArr.slice(3).join(' '),
     }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@steezcram/sevenzip",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "7-Zip wrapper around 7za",
   "homepage": "https://github.com/SteezCram/sevenzip",
   "repository": {

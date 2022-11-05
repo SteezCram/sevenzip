@@ -32,6 +32,10 @@ module.exports.compress = function (algorithm, parameters, callback = undefined,
         throw 'Parameters cannot be undefined or null';
     if (parameters.dir && parameters.files)
         throw 'Cannot use dir and files property at the same time';
+    if (!parameters.destination && parameters.files)
+        throw 'Cannot use files property without destination property';
+    if (!parameters.destination && parameters.dir)
+        parameters.destination = path.dirname(parameters.dir);
 
     algorithm = (algorithm === '' || algorithm === null || algorithm === undefined) ? '7z' : algorithm;
 
@@ -47,33 +51,21 @@ module.exports.compress = function (algorithm, parameters, callback = undefined,
 
     const dllPath = sevenZipBin.path7za;
 
-    if (callback) 
-    {
-        const sevenZipProcess = child_process.execFile(dllPath, buildCommandArgs('compress', parameters, algorithm), {shell: true, detached: false}, (error, stdout, stderr) => {
-            callback(error);
-        });
-
-        let send = false;
-        sevenZipProcess.stdout.on('data', (data) =>
-        {
-            if (data.includes('1%')) {
-                send = true;
-            }
-            else if (data.includes('99%')) {
-                send = false;
-            }
-
-            if (send) {
-                progressCallback(parseProgress(data));
-            }
-        });
-        return;
-    }
-
     return new Promise((resolve, reject) => 
     {
-        const sevenZipProcess = child_process.execFile(dllPath, buildCommandArgs('compress', parameters, algorithm), {shell: true, detached: false}, (error, stdout, stderr) => {
-            resolve(error);
+        const sevenZipProcess = child_process.execFile(dllPath, buildCommandArgs('compress', parameters, algorithm), { shell: true, detached: false }, (error, stdout, stderr) =>
+        {
+            if (progressCallback) {
+                progressCallback({
+                    progress: 100,
+                    fileProcessed: ''
+                });
+            }
+            
+            if (callback) callback(error);
+            
+            if (error) reject(error);
+            else resolve();
         });
 
         let send = false;
@@ -83,7 +75,7 @@ module.exports.compress = function (algorithm, parameters, callback = undefined,
             else if (data.includes('99%'))
                 send = false;
 
-            if (send && progressCallback !== undefined && progressCallback !== null) {
+            if (progressCallback && send) {
                 progressCallback(parseProgress(data));
             }
         });
@@ -108,42 +100,32 @@ module.exports.extract = function (algorithm, parameters, callback = undefined, 
 
     const dllPath = sevenZipBin.path7za;
 
-    if (callback) 
-    {
-        const sevenZipProcess = child_process.execFile(dllPath, buildCommandArgs('extract', parameters), {shell: true, detached: false}, (error, stdout, stderr) => {
-            callback(error);
-        });
-
-        let send = false;
-        sevenZipProcess.stdout.on('data', (data) => {
-            if (data.includes('1%')) {
-                send = true;
-            }
-            else if (data.includes('99%')) {
-                send = false;
-            }
-
-            if (send && progressCallback !== undefined && progressCallback !== null) {
-                progressCallback(parseProgress(data));
-            }
-        });
-        return;
-    }
-
     return new Promise((resolve, reject) => 
     {
-        const sevenZipProcess = child_process.execFile(dllPath, buildCommandArgs('extract', parameters), {shell: true, detached: false}, (error, stdout, stderr) => {
-            resolve(error);
+        const sevenZipProcess = child_process.execFile(dllPath, buildCommandArgs('extract', parameters), { shell: true, detached: false }, (error, stdout, stderr) =>
+        {
+            if (progressCallback) {
+                progressCallback({
+                    progress: 100,
+                    fileProcessed: ''
+                });
+            }
+
+            if (callback) callback(error);
+
+            if (error) reject(error);
+            else resolve();
         });
         
         let send = false;
-        sevenZipProcess.stdout.on('data', (data) => {
+        sevenZipProcess.stdout.on('data', (data) =>
+        {
             if (data.includes('1%'))
                 send = true;
             else if (data.includes('99%'))
                 send = false;
 
-            if (send) {
+            if (progressCallback && send) {
                 progressCallback(parseProgress(data));
             }
         });
